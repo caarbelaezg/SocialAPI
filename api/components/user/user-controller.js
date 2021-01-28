@@ -9,30 +9,12 @@ module.exports = function (injectedStore) {
     store = require("../../../store/dummy");
   }
 
-  const list = (id) => {
-    return store.list(TABLA, id);
+  const list = () => {
+    return store.list(TABLA);
   };
 
-  const get = async (body) => {
-    const user = {
-      name: body.name,
-      username: body.username,
-    };
-
-    if (body.id) {
-      user.id = body.id;
-    } else {
-      user.id = nanoid();
-    }
-
-    if (body.password || body.username) {
-      await auth.upsert({
-        id: user.id,
-        username: user.username,
-        password: user.password,
-      });
-    }
-    return store.upsert(TABLA, user);
+  const get = async (id) => {
+    return store.get(TABLA, id);
   };
 
   const upsert = async (body) => {
@@ -46,12 +28,12 @@ module.exports = function (injectedStore) {
       user.id = nanoid();
     }
 
-    if(body.password || body.username){
+    if (body.password || body.username) {
       await auth.upsert({
         id: user.id,
         username: user.username,
-        password : body.password
-      })
+        password: body.password,
+      });
     }
     return store.upsert(TABLA, user);
   };
