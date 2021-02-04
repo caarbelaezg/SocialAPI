@@ -47,6 +47,9 @@ const check = {
       throw error("You can not do this", 401);
     }
   },
+  logged: (req, owner) => {
+    const decoded = decodeHeader(req);
+  },
 };
 
 module.exports = {

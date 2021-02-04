@@ -33,8 +33,30 @@ const upsert = (req, res, next) => {
     .catch(next);
 };
 
+const follow = (req, res, next) => {
+  controller
+    .follow(req.user.id, req.params.id)
+    .then((data) => {
+      response.success(req, res, data, 201);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const following = (req, res, next) => {
+  return controller
+    .following(req.params.id)
+    .then((data) => {
+      return response.success(req, res, data, 200);
+    })
+    .catch(next);
+};
+
 //Routes
 router.get("/", list);
+router.post("/follow/:id", secure("follow"), follow);
+router.post("/:id/following", following);
 router.get("/:id", get);
 router.post("/", upsert);
 router.put("/", secure("update"), upsert);

@@ -17,7 +17,7 @@ module.exports = function (injectedStore) {
     return store.get(TABLA, id);
   };
 
-  const upsert = async (body) => {
+  const upsert = async (table, body) => {
     const user = {
       username: body.username,
       name: body.name,
@@ -35,12 +35,25 @@ module.exports = function (injectedStore) {
         password: body.password,
       });
     }
-    return store.upsert(TABLA, user);
+    return store.upsert(table, user);
+  };
+
+  const follow = (from, to) => {
+    return store.upsert(TABLA + "_follow", { user_from: from, user_to: to });
+  };
+
+  const following = async (user) => {
+    const join = {};
+    join[TABLA] = "user_to"; // {user: "user_to"}
+    const query = { user_from: user };
+    return await store.query(TABLA + "_follow", query, join);
   };
 
   return {
     list,
     get,
     upsert,
+    follow,
+    following,
   };
 };
